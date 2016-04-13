@@ -92,6 +92,7 @@ public class DeviceControlActivity extends Activity implements SilkwormCallback 
             final String action = intent.getAction();
             switch (action) {
                 case BluetoothLeService.ACTION_DISCOVERED:
+                    Log.i(TAG, "discovered");
                     initCharacteristic(mBluetoothLeService.getSupportedGattServices());
                     break;
                 case BluetoothLeService.ACTION_CONNECTED:
@@ -150,17 +151,17 @@ public class DeviceControlActivity extends Activity implements SilkwormCallback 
 
         silkwormProtocol = new SilkwormProtocol();
         silkwormProtocol.setSilkwormCallback(this);
-        silkwormProtocol.start();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
+        registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());  //注册完后启动
         if (mBluetoothLeService != null) {
             final boolean result = mBluetoothLeService.connect(mDeviceAddress);
             Log.d(TAG, "Connect request result=" + result);
         }
+        silkwormProtocol.start();
     }
 
     @Override
@@ -193,7 +194,9 @@ public class DeviceControlActivity extends Activity implements SilkwormCallback 
 
     //初始化ble设备,这个是根据cc2540/1写的,配置已经写死了
     private void initCharacteristic(List<BluetoothGattService> gattServices) {
-        if (gattServices == null) return;
+        if (gattServices == null) {
+            return;
+        }
 
         for (BluetoothGattService gattService : gattServices) {
             List<BluetoothGattCharacteristic> gattCharacteristics =
@@ -226,7 +229,7 @@ public class DeviceControlActivity extends Activity implements SilkwormCallback 
     //定义怎么发送数据,这个是死的,可以照着写
     @Override
     public void onSendData(String data) {
-        if (!data.isEmpty()) {
+        if (!data.isEmpty() && mBluetoothLeService != null) {
             mBluetoothLeService.setCharacteristicNotification(CC2540_char, true);
             CC2540_char.setValue(data.getBytes());
             mBluetoothLeService.writeCharacteristic(CC2540_char);

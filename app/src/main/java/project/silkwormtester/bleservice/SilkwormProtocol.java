@@ -26,14 +26,13 @@ public class SilkwormProtocol {
     //private BluetoothLeService bluetoothLeService; //用来发送数据
     private ProtocolState innerState;
     private SilkwormCallback silkwormCallback;  //回调
-    private String recvData;
     private String sendData;
     private String view;     //表示显示的是哪个界面, 因为需要接收的数据不一样
 
     //定时器用于重传
     private Timer timer = new Timer();
     private TimerTask timerTask;
-    private boolean retransmission = true;
+    private boolean retransmission = false;
 
     //private static SilkwormProtocol silkwormProtocol;  //不能使用单例模式
 
@@ -73,8 +72,10 @@ public class SilkwormProtocol {
     }
 
     public void setRecvData (String recvData) {
+        recvData = recvData.trim();
         switch (innerState) {
             case Hello_Reply:
+                Log.i(TAG+"recv", recvData);
                 handleHelloReply(recvData);
                 break;
             case D1:  //等待完整数据的接收

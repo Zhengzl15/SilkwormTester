@@ -255,6 +255,9 @@ public class BluetoothLeService extends Service {
             Log.w(TAG, "BluetoothAdapter not initialized");
             return;
         }
+        if (characteristic == null) {
+            Log.i(TAG, "null char");
+        }
         mBluetoothGatt.setCharacteristicNotification(characteristic, enabled);
 
         if (UUID_HEART_RATE_MEASUREMENT.equals(characteristic.getUuid())) {
