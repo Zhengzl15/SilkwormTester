@@ -33,8 +33,6 @@ public class MainActivity extends FragmentActivity {
 	private int line_width;
 	private View line;
 
-	
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
