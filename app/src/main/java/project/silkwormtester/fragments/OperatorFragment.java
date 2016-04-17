@@ -127,7 +127,7 @@ public class OperatorFragment extends Fragment implements View.OnClickListener{
 				Intent intent_scan = new Intent();
 				intent_scan.setClass(getActivity(), DeviceScanActivity.class);
 				startActivity(intent_scan);
-				getActivity().finish();//停止当前的Activity,如果不写,则按返回键会跳转回原来的Activity
+//				getActivity().finish();//停止当前的Activity,如果不写,则按返回键会跳转回原来的Activity
 				break;
 		}
 	}
