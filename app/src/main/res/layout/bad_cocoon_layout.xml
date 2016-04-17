@@ -37,7 +37,7 @@
         android:layout_marginBottom="10dp"
         android:gravity="bottom"
         android:editable="false"
-        android:hint="克重"/>
+        android:hint="粒数"/>
 
     <TextView
         android:id="@+id/id_bad_cocoon_postfix"

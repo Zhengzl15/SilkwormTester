@@ -1,6 +1,7 @@
 package project.silkwormtester.activities;
 
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -13,11 +14,14 @@ import android.widget.TextView;
 
 import com.nineoldandroids.view.ViewPropertyAnimator;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import project.silkwormtester.R;
 import project.silkwormtester.fragments.DetectionFragment;
 import project.silkwormtester.fragments.OperatorFragment;
+import project.silkwormtester.localdata.Config;
 
 public class MainActivity extends FragmentActivity {
 	private ArrayList<Fragment> fragments;
@@ -37,6 +41,7 @@ public class MainActivity extends FragmentActivity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_main);
 
+		pathCheck();
 		tab_detection = (TextView) findViewById(R.id.tab_detection);
 		tab_operator = (TextView) findViewById(R.id.tab_operator);
 		line = findViewById(R.id.line);
@@ -133,5 +138,16 @@ public class MainActivity extends FragmentActivity {
 		}
 	}
 
+	private void pathCheck() {
+		String sdPath = "";
+		if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+			sdPath = Environment.getExternalStorageDirectory().toString();
+		}
+		String baseDir = sdPath + Config.BASE_DIR;
+		File base = new File(baseDir);
+		if(!base.exists()) {
+			base.mkdir();
+		}
+	}
 	
 }

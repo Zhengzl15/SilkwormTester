@@ -30,7 +30,7 @@
     </LinearLayout>
 
     <EditText
-        android:id="@+id/id_dry_shell_content"
+        android:id="@+id/id_dry_shell_liang_content"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="2"

@@ -36,7 +36,7 @@
         android:layout_weight="2"
         android:layout_marginBottom="10dp"
         android:gravity="bottom"
-        android:numeric="integer"
+        android:editable="false"
         android:hint="上车茧率"/>
 
     <TextView

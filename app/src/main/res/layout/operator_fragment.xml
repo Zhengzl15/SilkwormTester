@@ -24,18 +24,31 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="30.0dip" >
 
-                <ImageView
-                    android:layout_width="57.0dip"
-                    android:layout_height="57.0dip"
-                    android:layout_gravity="center"
-                    android:adjustViewBounds="true"
-                    android:contentDescription="@null"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/ic_account_circle_black_48dp" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="57.0dip"
+                        android:layout_height="57.0dip"
+                        android:layout_gravity="center"
+                        android:adjustViewBounds="true"
+                        android:contentDescription="@null"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/ic_account_circle_black_48dp" />
+
+                    <TextView
+                        android:id="@+id/text_detector"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="请登陆"/>
+                </LinearLayout>
             </FrameLayout>
 
             <EditText
-                android:id="@+id/userNameText"
+                android:id="@+id/input_username"
                 android:layout_width="fill_parent"
                 android:layout_height="50.0dip"
                 android:layout_marginLeft="15.0dip"
@@ -78,6 +91,19 @@
                 android:background="#66CD00"
                 android:singleLine="true"
                 android:text="历史查询"
+                android:textColor="#ffffffff"
+                android:textSize="18.0sp" />
+
+            <Button
+                android:id="@+id/button_scan_bluetooth_device"
+                android:layout_width="fill_parent"
+                android:layout_height="50.0dip"
+                android:layout_marginLeft="15.0dip"
+                android:layout_marginRight="15.0dip"
+                android:layout_marginTop="20dip"
+                android:background="#66CD00"
+                android:singleLine="true"
+                android:text="连接设备"
                 android:textColor="#ffffffff"
                 android:textSize="18.0sp" />
         </LinearLayout>
