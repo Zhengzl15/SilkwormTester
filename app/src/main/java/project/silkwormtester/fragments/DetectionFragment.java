@@ -267,7 +267,7 @@ public class DetectionFragment extends Fragment implements View.OnClickListener,
 			final boolean result = mBluetoothLeService.connect(mDeviceAddress);
 			Log.d(TAG, "Connect request result=" + result);
 		}
-		silkwormProtocol.start();
+		//silkwormProtocol.start();
 	}
 
 	@Override
