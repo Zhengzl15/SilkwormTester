@@ -148,7 +148,7 @@ public class SilkwormProtocol {
                         continue;
                     }
                 }
-
+                Log.i(TAG, type + " : " + content);
                 silkwormCallback.onContentAvai(type, content);
                 reply(SilkwormConstrain.D1_REPLY_HEADER + type);
             } else if (recvData.length() == 2 && recvData.equals(SilkwormConstrain.M3)) {  //已经完成了数据发送的过程了
