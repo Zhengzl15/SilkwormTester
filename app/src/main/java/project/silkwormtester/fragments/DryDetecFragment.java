@@ -4,6 +4,7 @@ package project.silkwormtester.fragments;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -187,8 +188,8 @@ public class DryDetecFragment extends DetecFragment {
     }
 
     @Override
-    public void setData(char Type, String data) {
-        switch (Type) {
+    public void setData(char type, String data) {
+        switch (type) {
             case '0':
                 gloss.setText(data);
                 break;

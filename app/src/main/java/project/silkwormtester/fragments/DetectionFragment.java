@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -24,6 +25,8 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import project.silkwormtester.R;
 import project.silkwormtester.bleservice.BluetoothLeService;
@@ -209,6 +212,14 @@ public class DetectionFragment extends Fragment implements View.OnClickListener,
 				case BluetoothLeService.ACTION_CONNECTED:
 					mConnected = true;
 					Log.i(TAG, "connected");
+					final boolean isOk = true;
+					//给一定时延
+					new Handler().postDelayed(new Runnable(){
+						public void run() {
+							Log.i(TAG, "delay");
+							silkwormProtocol.start();
+						}
+					}, 3000);
 					break;
 				case BluetoothLeService.ACTION_DISCONNECTED:
 					mConnected = false;
@@ -345,7 +356,7 @@ public class DetectionFragment extends Fragment implements View.OnClickListener,
 	@Override
 	public void onChangedView(String view) {
 		Log.i(TAG, view);
-		switchFragment(view.trim().charAt(0));
+		switchFragment(view.trim().charAt(1));
 	}
 
 	//收到要显示内容,为该内容的类型type, 数据data. 具体参照协议的定义
