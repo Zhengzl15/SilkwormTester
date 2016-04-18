@@ -54,7 +54,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.DeviceScanActivity"/>
-        <activity android:name=".activities.DeviceControlActivity"/>
         <activity android:name=".activities.DetectionReaderActivity"
             android:label="Reader"/>
 

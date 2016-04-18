@@ -174,7 +174,10 @@ public class DetectionFragment extends Fragment implements View.OnClickListener,
 				//finish();
 			}
 			// 直接连接
-			mBluetoothLeService.connect(mDeviceAddress);
+			boolean conn = mBluetoothLeService.connect(mDeviceAddress);
+			if (conn) {
+				Log.i(TAG, "true");
+			}
 		}
 
 		@Override
@@ -205,16 +208,16 @@ public class DetectionFragment extends Fragment implements View.OnClickListener,
 					break;
 				case BluetoothLeService.ACTION_CONNECTED:
 					mConnected = true;
-					updateConnectionState(R.string.connected);
-					Toast.makeText(getContext(), "检测到蓝牙设备断开连接,请重新连接", Toast.LENGTH_LONG).show();
+					Log.i(TAG, "connected");
 					break;
 				case BluetoothLeService.ACTION_DISCONNECTED:
 					mConnected = false;
-					updateConnectionState(R.string.disconnected);
+					Log.i(TAG, "disconnected");
+					Toast.makeText(getContext(), "检测到蓝牙设备断开连接,请重新连接", Toast.LENGTH_LONG).show();
 					break;
 				case BluetoothLeService.ACTION_DATA_AVAILABLE:
 					//收到数据时,传给protocl处理
-					displayData(intent.getStringExtra(BluetoothLeService.EXTRA_DATA));
+					//displayData(intent.getStringExtra(BluetoothLeService.EXTRA_DATA));
 					silkwormProtocol.setRecvData(intent.getStringExtra(BluetoothLeService.EXTRA_DATA));
 					break;
 				default:
@@ -262,12 +265,16 @@ public class DetectionFragment extends Fragment implements View.OnClickListener,
 	@Override
 	public void onResume() {
 		super.onResume();
+		Log.i(TAG, "resumre");
 		getActivity().registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());  //注册完后启动
 		if (mBluetoothLeService != null) {
 			final boolean result = mBluetoothLeService.connect(mDeviceAddress);
 			Log.d(TAG, "Connect request result=" + result);
+			if (result) {
+				Log.i(TAG, "start");
+				silkwormProtocol.start();
+			}
 		}
-		//silkwormProtocol.start();
 	}
 
 	@Override
@@ -281,15 +288,6 @@ public class DetectionFragment extends Fragment implements View.OnClickListener,
 		super.onDestroy();
 		getActivity().unbindService(mServiceConnection);
 		mBluetoothLeService = null;
-	}
-
-	private void updateConnectionState(final int resourceId) {
-		getActivity().runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				mConnectionState.setText(resourceId);
-			}
-		});
 	}
 
 	private void displayData(String data) {
