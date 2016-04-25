@@ -15,6 +15,7 @@ import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,10 +26,9 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import project.silkwormtester.R;
+import project.silkwormtester.activities.MainActivity;
 import project.silkwormtester.bleservice.BluetoothLeService;
 import project.silkwormtester.bleservice.SilkwormCallback;
 import project.silkwormtester.bleservice.SilkwormProtocol;
@@ -213,6 +213,8 @@ public class DetectionFragment extends Fragment implements View.OnClickListener,
 					mConnected = true;
 					Log.i(TAG, "connected");
 					final boolean isOk = true;
+					Toast.makeText(getContext(), "成功连接蓝牙设备", Toast.LENGTH_LONG).show();
+					((MainActivity)getActivity()).setButtonText("断开设备连接");
 					//给一定时延
 					new Handler().postDelayed(new Runnable(){
 						public void run() {
@@ -224,7 +226,14 @@ public class DetectionFragment extends Fragment implements View.OnClickListener,
 				case BluetoothLeService.ACTION_DISCONNECTED:
 					mConnected = false;
 					Log.i(TAG, "disconnected");
-					Toast.makeText(getContext(), "检测到蓝牙设备断开连接,请重新连接", Toast.LENGTH_LONG).show();
+					((MainActivity)getActivity()).setButtonText("连接设备");
+					silkwormProtocol.reset();
+					//Toast.makeText(getContext(), "检测到蓝牙设备断开连接,请重新连接", Toast.LENGTH_LONG).show();
+					new AlertDialog.Builder(getContext())
+							.setTitle("提示" )
+							.setMessage("检测到蓝牙设备断开连接,请重新连接" )
+							.setPositiveButton("确定" ,  null )
+							.show();
 					break;
 				case BluetoothLeService.ACTION_DATA_AVAILABLE:
 					//收到数据时,传给protocl处理
@@ -291,7 +300,14 @@ public class DetectionFragment extends Fragment implements View.OnClickListener,
 	@Override
 	public void onPause() {
 		super.onPause();
-		getActivity().unregisterReceiver(mGattUpdateReceiver);
+		try {
+			getActivity().unregisterReceiver(mGattUpdateReceiver);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			return;
+		}
+
 	}
 
 	@Override
@@ -299,12 +315,6 @@ public class DetectionFragment extends Fragment implements View.OnClickListener,
 		super.onDestroy();
 		getActivity().unbindService(mServiceConnection);
 		mBluetoothLeService = null;
-	}
-
-	private void displayData(String data) {
-		if (data != null) {
-			mDataField.setText(data);
-		}
 	}
 
 	//初始化ble设备,这个是根据cc2540/1写的,配置已经写死了
@@ -372,4 +382,22 @@ public class DetectionFragment extends Fragment implements View.OnClickListener,
 		Log.i(TAG, "Completed!");
 		Toast.makeText(getContext(), "数据接受完成", Toast.LENGTH_LONG).show();
 	}
+
+	public void disconnectBle() {
+		if (silkwormProtocol != null) {
+			silkwormProtocol.stop();
+			silkwormProtocol.reset();
+		}
+		if (mBluetoothLeService != null) {
+			mBluetoothLeService.disconnect();
+		}
+		try {
+			getActivity().unregisterReceiver(mGattUpdateReceiver);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			return;
+		}
+	}
+
 }

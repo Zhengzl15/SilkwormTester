@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,18 +13,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOException;
 
 import project.silkwormtester.R;
 import project.silkwormtester.activities.DetectionReaderActivity;
-import project.silkwormtester.activities.DeviceScanActivity;
+import project.silkwormtester.activities.MainActivity;
+import project.silkwormtester.activities.ScanDeviceActivity;
 import project.silkwormtester.localdata.Config;
 
 public class OperatorFragment extends Fragment implements View.OnClickListener{
@@ -37,6 +35,33 @@ public class OperatorFragment extends Fragment implements View.OnClickListener{
 	private Button scan_bluetooth_devices;
 	private String username = "请登录";
 
+	private boolean conn = false;
+/*
+	//接收的广播
+	private static IntentFilter makeGattUpdateIntentFilter() {
+		final IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction(BluetoothLeService.ACTION_CONNECTED);
+		intentFilter.addAction(BluetoothLeService.ACTION_DISCONNECTED);
+		return intentFilter;
+	}
+
+	//接收service的广播信息
+	private final BroadcastReceiver mGattUpdateReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			final String action = intent.getAction();
+			switch (action) {
+				case BluetoothLeService.ACTION_CONNECTED:
+					scan_bluetooth_devices.setText("断开设备连接");
+					break;
+				case BluetoothLeService.ACTION_DISCONNECTED:
+					scan_bluetooth_devices.setText("连接设备");
+					break;
+			}
+		}
+	};
+
+*/
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 							 Bundle savedInstanceState) {
@@ -50,6 +75,13 @@ public class OperatorFragment extends Fragment implements View.OnClickListener{
 	@Override
 	public void onResume() {
 		super.onResume();
+		//getActivity().registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());  //注册完后启动
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		//getActivity().unregisterReceiver(mGattUpdateReceiver);
 	}
 
 	private void setOnClickListener() {
@@ -124,11 +156,23 @@ public class OperatorFragment extends Fragment implements View.OnClickListener{
 				startActivity(intent);
 				break;
 			case R.id.button_scan_bluetooth_device:
-				Intent intent_scan = new Intent();
-				intent_scan.setClass(getActivity(), DeviceScanActivity.class);
-				startActivity(intent_scan);
-//				getActivity().finish();//停止当前的Activity,如果不写,则按返回键会跳转回原来的Activity
+				if (scan_bluetooth_devices.getText().equals("连接设备")) {
+					Log.i("zzl", "con");
+					((MainActivity) getActivity()).disconnectBle();
+					Intent intent_scan = new Intent();
+					intent_scan.setClass(getActivity(), ScanDeviceActivity.class);
+					startActivity(intent_scan);
+				} else {
+					Log.i("zzl", "dis");
+					((MainActivity) getActivity()).disconnectBle();
+					scan_bluetooth_devices.setText("连接设备");
+				}
 				break;
 		}
 	}
+
+	public void setButtonText(String text) {
+		scan_bluetooth_devices.setText(text);
+	}
+
 }

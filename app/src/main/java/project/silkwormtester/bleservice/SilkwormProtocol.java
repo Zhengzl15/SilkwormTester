@@ -48,6 +48,7 @@ public class SilkwormProtocol {
             @Override
             public void run() {
                 if (retransmission) {
+                    Log.i(TAG, "true");
                     silkwormCallback.onSendData(sendData);
                     Log.i(TAG, "retransmission");
                 }
@@ -59,16 +60,35 @@ public class SilkwormProtocol {
 
     //调用该函数,协议开始工作
     public void start() {
-        this.timerTask = null;  //回收原来的task
+        //this.timerTask = null;  //回收原来的task
+        if (timerTask == null) {
+            timerTask = new TimerTask() {
+                @Override
+                public void run() {
+                    if (retransmission) {
+                        silkwormCallback.onSendData(sendData);
+                        Log.i(TAG, "retransmission");
+                    }
+                }
+            };
+            timer.schedule(this.timerTask, 0, 2000);  //2000ms一次重传
+        }
         silkwormCallback.onSendData("hello");
         this.sendData = "hello";
         innerState = ProtocolState.Hello_Reply;
         retransmission = true;
     }
 
+    public void reset() {
+        timerTask = null;
+        retransmission = false;
+        innerState = ProtocolState.Hello;
+    }
+
     //用于释放资源
     public void stop () {
         this.timerTask = null;
+        retransmission = false;
     }
 
     public void setRecvData (String recvData) {

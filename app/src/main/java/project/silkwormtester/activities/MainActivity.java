@@ -1,5 +1,7 @@
 package project.silkwormtester.activities;
 
+import android.bluetooth.BluetoothAdapter;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
@@ -7,10 +9,12 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.nineoldandroids.view.ViewPropertyAnimator;
 
@@ -25,7 +29,7 @@ import project.silkwormtester.localdata.Config;
 
 public class MainActivity extends FragmentActivity {
 	private ArrayList<Fragment> fragments;
-	private Fragment operator;
+	private OperatorFragment operator;
 	private DetectionFragment detection;
 	private ViewPager viewPager;
 	private TextView tab_detection;
@@ -38,6 +42,12 @@ public class MainActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_main);
+
+		BluetoothAdapter blueAdapter = BluetoothAdapter.getDefaultAdapter();
+		if (!blueAdapter.isEnabled()) {
+			Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+			startActivityForResult(enableBtIntent, 1);
+		}
 
 		pathCheck();
 		tab_detection = (TextView) findViewById(R.id.tab_detection);
@@ -109,7 +119,7 @@ public class MainActivity extends FragmentActivity {
 				viewPager.setCurrentItem(0);
 			}
 		});
-		viewPager.setCurrentItem(1);
+		viewPager.setCurrentItem(0);
 	}
 
 	/* ���ݴ����ֵ���ı�״̬ */
@@ -146,6 +156,14 @@ public class MainActivity extends FragmentActivity {
 		if(!base.exists()) {
 			base.mkdir();
 		}
+	}
+
+	public void setButtonText(String text) {
+		operator.setButtonText(text);
+	}
+
+	public void disconnectBle() {
+		detection.disconnectBle();
 	}
 	
 }
