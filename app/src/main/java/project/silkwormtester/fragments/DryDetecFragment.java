@@ -53,7 +53,7 @@ public class DryDetecFragment extends DetecFragment {
     private String str_dryShellLiang;
     private String str_level;
     private String str_soldWeight;
-
+    private final static String Type = "y";
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
@@ -85,7 +85,8 @@ public class DryDetecFragment extends DetecFragment {
             return false;
         }
         String str_detector = loadDetector();
-        String content = str_detector + SPLITOR +
+        String content =  Type + SPLITOR +
+                str_detector + SPLITOR +
                 str_customer + SPLITOR +
                 str_id + SPLITOR +
                 str_gloss + SPLITOR +

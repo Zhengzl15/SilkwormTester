@@ -46,7 +46,7 @@ public class DetectionFragment extends Fragment implements View.OnClickListener,
 			view = View.inflate(getActivity(), R.layout.detection_fragment, null);
 			submitButton = (Button) view.findViewById(R.id.submit_button);
 			submitButton.setOnClickListener(this);
-			switchFragment('z');
+			switchFragment('x');
 			initial_bluetooth();
 		}else if(view.getParent() != null){
 			((ViewGroup) view.getParent()).removeView(view);
