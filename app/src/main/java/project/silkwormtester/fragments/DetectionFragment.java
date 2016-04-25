@@ -355,6 +355,7 @@ public class DetectionFragment extends Fragment implements View.OnClickListener,
 	@Override
 	public void onSendData(String data) {
 		if (!data.isEmpty() && mBluetoothLeService != null) {
+			data = data + "\r\n";
 			mBluetoothLeService.setCharacteristicNotification(CC2540_char, true);
 			CC2540_char.setValue(data.getBytes());
 			mBluetoothLeService.writeCharacteristic(CC2540_char);
